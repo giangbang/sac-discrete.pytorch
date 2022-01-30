@@ -37,7 +37,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--config', type=str, default=os.path.join('config', 'sacd.yaml'))
     parser.add_argument('--shared', action='store_true')
-    parser.add_argument('--env_id', type=str, default='MsPacmanNoFrameskip-v4')
+    parser.add_argument('--env_id', type=str, default='LunarLander-v2')
     parser.add_argument('--cuda', action='store_true')
     parser.add_argument('--seed', type=int, default=0)
     args = parser.parse_args()

@@ -25,13 +25,13 @@ class SacdAgent(BaseAgent):
 
         # Define networks.
         self.policy = CateoricalPolicy(
-            self.env.observation_space.shape[0], self.env.action_space.n
+			np.prod(self.env.observation_space.shape), self.env.action_space.n
             ).to(self.device)
         self.online_critic = TwinnedQNetwork(
-            self.env.observation_space.shape[0], self.env.action_space.n,
+            np.prod(self.env.observation_space.shape), self.env.action_space.n,
             dueling_net=dueling_net).to(device=self.device)
         self.target_critic = TwinnedQNetwork(
-            self.env.observation_space.shape[0], self.env.action_space.n,
+            np.prod(self.env.observation_space.shape), self.env.action_space.n,
             dueling_net=dueling_net).to(device=self.device).eval()
 
         # Copy parameters of the learning network to the target network.
@@ -70,7 +70,7 @@ class SacdAgent(BaseAgent):
         return action.item()
 
     def update_target(self):
-        self.target_critic.load_state_dict(self.online_critic.state_dict())
+        self.target_critic.load_state_dict(self.online_critic.state_dict(), strict=True)
 
     def calc_current_q(self, states, actions, rewards, next_states, dones):
         curr_q1, curr_q2 = self.online_critic(states)

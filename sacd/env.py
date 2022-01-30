@@ -272,7 +272,6 @@ def make_atari(env_id):
     :return: (Gym Environment) the wrapped atari environment
     """
     env = gym.make(env_id)
-    assert 'NoFrameskip' in env.spec.id
     env = NoopResetEnv(env, noop_max=30)
     env = MaxAndSkipEnv(env, skip=4)
     return env
@@ -293,7 +292,6 @@ def wrap_deepmind_pytorch(env, episode_life=True, clip_rewards=True,
         env = EpisodicLifeEnv(env)
     if 'FIRE' in env.unwrapped.get_action_meanings():
         env = FireResetEnv(env)
-    env = WarpFramePyTorch(env)
     if clip_rewards:
         env = ClipRewardEnv(env)
     if scale:

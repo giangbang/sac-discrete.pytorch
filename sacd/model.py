@@ -26,15 +26,11 @@ class BaseNetwork(nn.Module):
 
 class DQNBase(BaseNetwork):
 
-    def __init__(self, num_channels):
+    def __init__(self, input_dims):
         super(DQNBase, self).__init__()
 
         self.net = nn.Sequential(
-            nn.Conv2d(num_channels, 32, kernel_size=8, stride=4, padding=0),
-            nn.ReLU(),
-            nn.Conv2d(32, 64, kernel_size=4, stride=2, padding=0),
-            nn.ReLU(),
-            nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=0),
+            nn.Conv2d(input_dims, 512),
             nn.ReLU(),
             Flatten(),
         ).apply(initialize_weights_he)
@@ -45,25 +41,25 @@ class DQNBase(BaseNetwork):
 
 class QNetwork(BaseNetwork):
 
-    def __init__(self, num_channels, num_actions, shared=False,
+    def __init__(self, input_dims, num_actions, shared=False,
                  dueling_net=False):
         super().__init__()
 
         if not shared:
-            self.conv = DQNBase(num_channels)
+            self.conv = DQNBase(input_dims)
 
         if not dueling_net:
             self.head = nn.Sequential(
-                nn.Linear(7 * 7 * 64, 512),
+                nn.Linear(input_dims, 512),
                 nn.ReLU(inplace=True),
                 nn.Linear(512, num_actions))
         else:
             self.a_head = nn.Sequential(
-                nn.Linear(7 * 7 * 64, 512),
+                nn.Linear(input_dims, 512),
                 nn.ReLU(inplace=True),
                 nn.Linear(512, num_actions))
             self.v_head = nn.Sequential(
-                nn.Linear(7 * 7 * 64, 512),
+                nn.Linear(input_dims, 512),
                 nn.ReLU(inplace=True),
                 nn.Linear(512, 1))
 
@@ -83,11 +79,11 @@ class QNetwork(BaseNetwork):
 
 
 class TwinnedQNetwork(BaseNetwork):
-    def __init__(self, num_channels, num_actions, shared=False,
+    def __init__(self, input_dims, num_actions, shared=False,
                  dueling_net=False):
         super().__init__()
-        self.Q1 = QNetwork(num_channels, num_actions, shared, dueling_net)
-        self.Q2 = QNetwork(num_channels, num_actions, shared, dueling_net)
+        self.Q1 = QNetwork(input_dims, num_actions, shared, dueling_net)
+        self.Q2 = QNetwork(input_dims, num_actions, shared, dueling_net)
 
     def forward(self, states):
         q1 = self.Q1(states)
@@ -97,13 +93,13 @@ class TwinnedQNetwork(BaseNetwork):
 
 class CateoricalPolicy(BaseNetwork):
 
-    def __init__(self, num_channels, num_actions, shared=False):
+    def __init__(self, input_dims, num_actions, shared=False):
         super().__init__()
         if not shared:
-            self.conv = DQNBase(num_channels)
+            self.conv = DQNBase(input_dims)
 
         self.head = nn.Sequential(
-            nn.Linear(7 * 7 * 64, 512),
+            nn.Linear(input_dims, 512),
             nn.ReLU(inplace=True),
             nn.Linear(512, num_actions))
 
