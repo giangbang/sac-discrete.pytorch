@@ -158,6 +158,8 @@ class BaseAgent(ABC):
         if self.episodes % self.log_interval == 0:
             self.writer.add_scalar(
                 'reward/train', self.train_return.get(), self.steps)
+			self.writer.add_scalar(
+                'alpha/train', self.alpha.item(), self.steps)
 
         print(f'Episode: {self.episodes:<4}  '
               f'Episode steps: {episode_steps:<4}  '

@@ -30,7 +30,7 @@ class DQNBase(BaseNetwork):
         super(DQNBase, self).__init__()
 
         self.net = nn.Sequential(
-            nn.Conv2d(input_dims, 512),
+            nn.Linear(input_dims, 512),
             nn.ReLU(),
             Flatten(),
         ).apply(initialize_weights_he)
@@ -55,11 +55,11 @@ class QNetwork(BaseNetwork):
                 nn.Linear(512, num_actions))
         else:
             self.a_head = nn.Sequential(
-                nn.Linear(input_dims, 512),
+                nn.Linear(512, 512),
                 nn.ReLU(inplace=True),
                 nn.Linear(512, num_actions))
             self.v_head = nn.Sequential(
-                nn.Linear(input_dims, 512),
+                nn.Linear(512, 512),
                 nn.ReLU(inplace=True),
                 nn.Linear(512, 1))
 
@@ -99,7 +99,7 @@ class CateoricalPolicy(BaseNetwork):
             self.conv = DQNBase(input_dims)
 
         self.head = nn.Sequential(
-            nn.Linear(input_dims, 512),
+            nn.Linear(512, 512),
             nn.ReLU(inplace=True),
             nn.Linear(512, num_actions))
 

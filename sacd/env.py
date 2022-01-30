@@ -272,7 +272,7 @@ def make_atari(env_id):
     :return: (Gym Environment) the wrapped atari environment
     """
     env = gym.make(env_id)
-    env = NoopResetEnv(env, noop_max=30)
+    # env = NoopResetEnv(env, noop_max=30)
     env = MaxAndSkipEnv(env, skip=4)
     return env
 
@@ -288,16 +288,16 @@ def wrap_deepmind_pytorch(env, episode_life=True, clip_rewards=True,
     :param scale: (bool) wrap the scaling observation wrapper
     :return: (Gym Environment) the wrapped atari environment
     """
-    if episode_life:
-        env = EpisodicLifeEnv(env)
-    if 'FIRE' in env.unwrapped.get_action_meanings():
-        env = FireResetEnv(env)
+    # if episode_life:
+        # env = EpisodicLifeEnv(env)
+    # if 'FIRE' in env.unwrapped.get_action_meanings():
+        # env = FireResetEnv(env)
     if clip_rewards:
         env = ClipRewardEnv(env)
     if scale:
         env = ScaledFloatFrame(env)
-    if frame_stack:
-        env = FrameStackPyTorch(env, 4)
+    # if frame_stack:
+        # env = FrameStackPyTorch(env, 4)
     return env
 
 
