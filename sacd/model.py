@@ -50,7 +50,7 @@ class QNetwork(BaseNetwork):
 
         if not dueling_net:
             self.head = nn.Sequential(
-                nn.Linear(input_dims, 512),
+                nn.Linear(512, 512),
                 nn.ReLU(inplace=True),
                 nn.Linear(512, num_actions))
         else:
